@@ -43,7 +43,7 @@ struct HomeView: View {
             }
         }
         .navigationTitle("Home")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
     }
 
     private var recentMoodSection: some View {

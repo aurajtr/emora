@@ -36,7 +36,7 @@ struct ProgressView: View {
             }
         }
         .navigationTitle("My Progress")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
     }
 
     private var statGrid: some View {

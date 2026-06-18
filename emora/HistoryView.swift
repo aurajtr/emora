@@ -40,7 +40,7 @@ struct HistoryView: View {
             }
         }
         .navigationTitle("Mood History")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
     }
 
     private var listContent: some View {
