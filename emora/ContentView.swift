@@ -28,7 +28,7 @@ struct ContentView: View {
                 HomeView()
             }
             .tabItem {
-                Label("Home", systemImage: "house.fill")
+                Label("Mood", systemImage: "heart.fill")
             }
 
             NavigationStack {

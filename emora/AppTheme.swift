@@ -1,23 +1,25 @@
 import SwiftUI
+import UIKit
 
 enum AppColor {
-    static let accent = Color(hex: "A85574")
-    static let accentSoft = Color(hex: "D98FA8")
-    static let destructive = Color(hex: "C23B3B")
+    static let accent = Color(hex: "A85574", darkHex: "E6A1BB")
+    static let accentSoft = Color(hex: "D98FA8", darkHex: "6A3448")
+    static let destructive = Color(hex: "C23B3B", darkHex: "FF6961")
 
-    static let textPrimary = Color(hex: "1A1A1A")
-    static let textSecondary = Color(hex: "5C5C5C")
-    static let textTertiary = Color(hex: "8A8A8A")
+    static let textPrimary = Color(hex: "1A1A1A", darkHex: "F5F1F3")
+    static let textSecondary = Color(hex: "5C5C5C", darkHex: "CFC7CB")
+    static let textTertiary = Color(hex: "8A8A8A", darkHex: "9A9296")
 
-    static let border = Color.black.opacity(0.08)
+    static let border = Color(hex: "000000", darkHex: "FFFFFF").opacity(0.08)
     static let surface = Color(.tertiarySystemFill)
-    static let chipSurface = Color(hex: "EDE9EC")
+    static let chipSurface = Color(hex: "EDE9EC", darkHex: "30282D")
+    static let statSurface = Color(hex: "F1D7E1", darkHex: "452B35")
     static let backgroundGradient = LinearGradient(
         stops: [
-            Gradient.Stop(color: Color(hex: "FFFFFF"), location: 0),
-            Gradient.Stop(color: Color(hex: "FFFDFC"), location: 0.32),
-            Gradient.Stop(color: Color(hex: "FDF1F6"), location: 0.68),
-            Gradient.Stop(color: Color(hex: "FAE8EF"), location: 1)
+            Gradient.Stop(color: Color(hex: "FFFFFF", darkHex: "181416"), location: 0),
+            Gradient.Stop(color: Color(hex: "FFFDFC", darkHex: "1D171A"), location: 0.32),
+            Gradient.Stop(color: Color(hex: "FDF1F6", darkHex: "241A1F"), location: 0.68),
+            Gradient.Stop(color: Color(hex: "FAE8EF", darkHex: "2A1D23"), location: 1)
         ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
@@ -78,15 +80,24 @@ extension View {
 }
 
 extension Color {
-    init(hex: String) {
-        let normalized = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+    init(hex: String, darkHex: String? = nil) {
+        self.init(UIColor { traitCollection in
+            UIColor(appHex: traitCollection.userInterfaceStyle == .dark ? darkHex ?? hex : hex)
+        })
+    }
+}
+
+private extension UIColor {
+    convenience init(appHex: String) {
+        let normalized = appHex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var rgb: UInt64 = 0
         Scanner(string: normalized).scanHexInt64(&rgb)
 
         self.init(
-            red: Double((rgb >> 16) & 0xFF) / 255,
-            green: Double((rgb >> 8) & 0xFF) / 255,
-            blue: Double(rgb & 0xFF) / 255
+            red: CGFloat((rgb >> 16) & 0xFF) / 255,
+            green: CGFloat((rgb >> 8) & 0xFF) / 255,
+            blue: CGFloat(rgb & 0xFF) / 255,
+            alpha: 1
         )
     }
 }

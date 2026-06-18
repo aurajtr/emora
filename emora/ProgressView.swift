@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProgressView: View {
     @Environment(MoodStore.self) private var moodStore
+    @State private var showsNavigationTitle = false
 
     private var stats: [ProgressStat] {
         [
@@ -15,7 +16,18 @@ struct ProgressView: View {
             AppColor.backgroundGradient.ignoresSafeArea()
 
             ScrollView {
+                GeometryReader { proxy in
+                    Color.clear
+                        .preference(
+                            key: ProgressScrollOffsetPreferenceKey.self,
+                            value: proxy.frame(in: .named("progressScroll")).minY
+                        )
+                }
+                .frame(height: 0)
+
                 VStack(alignment: .leading, spacing: AppSpacing.section) {
+                    pageHeader("Progress")
+
                     if moodStore.entriesThisMonth.isEmpty {
                         ContentUnavailableView(
                             "No Progress Yet",
@@ -34,9 +46,21 @@ struct ProgressView: View {
                 .padding(.top, 8)
                 .padding(.bottom, AppSpacing.screenVertical)
             }
+            .coordinateSpace(name: "progressScroll")
+            .onPreferenceChange(ProgressScrollOffsetPreferenceKey.self) { offset in
+                showsNavigationTitle = offset < -16
+            }
         }
-        .navigationTitle("My Progress")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle(showsNavigationTitle ? "Progress" : "")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func pageHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.system(.largeTitle, design: .default, weight: .bold))
+            .foregroundStyle(AppColor.textPrimary)
+            .accessibilityAddTraits(.isHeader)
+            .padding(.top, 28)
     }
 
     private var statGrid: some View {
@@ -58,7 +82,7 @@ struct ProgressView: View {
                 .padding(.bottom, 10)
                 .frame(maxWidth: .infinity)
                 .frame(height: 76)
-                .background(Color(hex: "F1D7E1"), in: RoundedRectangle(cornerRadius: AppSpacing.cardRadius, style: .continuous))
+                .background(AppColor.statSurface, in: RoundedRectangle(cornerRadius: AppSpacing.cardRadius, style: .continuous))
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(stat.value) \(stat.title)")
             }
@@ -112,6 +136,14 @@ struct ProgressView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardBackground()
         .accessibilityElement(children: .contain)
+    }
+}
+
+private struct ProgressScrollOffsetPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

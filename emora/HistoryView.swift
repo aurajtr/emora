@@ -6,6 +6,7 @@ struct HistoryView: View {
     @State private var selectedSort = HistorySort.mostRecent
     @State private var displayedMonth = Date.now
     @State private var selectedDate = Date.now
+    @State private var showsNavigationTitle = false
 
 
     private var calendar: Calendar {
@@ -19,7 +20,18 @@ struct HistoryView: View {
             AppColor.backgroundGradient.ignoresSafeArea()
 
             ScrollView {
+                GeometryReader { proxy in
+                    Color.clear
+                        .preference(
+                            key: HistoryScrollOffsetPreferenceKey.self,
+                            value: proxy.frame(in: .named("historyScroll")).minY
+                        )
+                }
+                .frame(height: 0)
+
                 VStack(alignment: .leading, spacing: AppSpacing.section) {
+                    pageHeader("Mood History")
+
                     Picker("History View", selection: $selectedMode) {
                         ForEach(HistoryMode.allCases) { mode in
                             Text(mode.title).tag(mode)
@@ -38,9 +50,21 @@ struct HistoryView: View {
                 .padding(.top, 8)
                 .padding(.bottom, AppSpacing.screenVertical)
             }
+            .coordinateSpace(name: "historyScroll")
+            .onPreferenceChange(HistoryScrollOffsetPreferenceKey.self) { offset in
+                showsNavigationTitle = offset < -16
+            }
         }
-        .navigationTitle("Mood History")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle(showsNavigationTitle ? "Mood History" : "")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func pageHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.system(.largeTitle, design: .default, weight: .bold))
+            .foregroundStyle(AppColor.textPrimary)
+            .accessibilityAddTraits(.isHeader)
+            .padding(.top, 28)
     }
 
     private var listContent: some View {
@@ -243,6 +267,14 @@ struct HistoryView: View {
         formatter.locale = Locale.autoupdatingCurrent
         formatter.dateFormat = "MMM"
         return formatter.string(from: date).uppercased()
+    }
+}
+
+private struct HistoryScrollOffsetPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

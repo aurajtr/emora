@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(MoodStore.self) private var moodStore
     @State private var selectedMood: Mood?
+    @State private var showsNavigationTitle = false
 
     init(initialSelectedMood: Mood? = nil) {
         _selectedMood = State(initialValue: initialSelectedMood)
@@ -13,8 +14,17 @@ struct HomeView: View {
             AppColor.backgroundGradient.ignoresSafeArea()
 
             ScrollView {
+                GeometryReader { proxy in
+                    Color.clear
+                        .preference(
+                            key: HomeScrollOffsetPreferenceKey.self,
+                            value: proxy.frame(in: .named("homeScroll")).minY
+                        )
+                }
+                .frame(height: 0)
+
                 VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    ProfileHeaderView()
+                    homeHeader
 
                     if let todayEntry = moodStore.todayEntry {
                         MoodLoggedView(
@@ -38,18 +48,61 @@ struct HomeView: View {
                     recentMoodSection
                 }
                 .padding(.horizontal, AppSpacing.screenHorizontal)
-                .padding(.top, 8)
+                .padding(.top, 0)
                 .padding(.bottom, AppSpacing.screenVertical)
             }
+            .coordinateSpace(name: "homeScroll")
+            .onPreferenceChange(HomeScrollOffsetPreferenceKey.self) { offset in
+                showsNavigationTitle = offset < -16
+            }
         }
-        .navigationTitle("Home")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle(showsNavigationTitle ? "Mood" : "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(showsNavigationTitle ? .visible : .hidden, for: .navigationBar)
+    }
+
+    private var homeHeader: some View {
+        HStack(alignment: .center) {
+            Text("Mood")
+                .font(.system(.largeTitle, design: .default, weight: .bold))
+                .foregroundStyle(AppColor.textPrimary)
+                .accessibilityAddTraits(.isHeader)
+
+            Spacer()
+
+            profileButton
+        }
+        .padding(.top, 35)
+    }
+
+    private var profileButton: some View {
+        Image("profile")
+            .resizable()
+            .scaledToFill()
+            .frame(width: 44, height: 44)
+            .clipShape(Circle())
+            .overlay {
+                Circle().stroke(AppColor.border, lineWidth: 0.5)
+            }
+            .accessibilityLabel("Profile")
     }
 
     private var recentMoodSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Recent Moods")
-                .sectionTitleStyle()
+            HStack(alignment: .firstTextBaseline) {
+                Text("Recent Moods")
+                    .sectionTitleStyle()
+
+                Spacer()
+
+                if !moodStore.recentEntries.isEmpty {
+                    NavigationLink("See All") {
+                        HistoryView()
+                    }
+                    .font(.system(.subheadline, design: .default, weight: .semibold))
+                    .foregroundStyle(AppColor.accent)
+                }
+            }
 
             if moodStore.recentEntries.isEmpty {
                 Text("No mood recorded yet")
@@ -61,6 +114,14 @@ struct HomeView: View {
                 }
             }
         }
+    }
+}
+
+private struct HomeScrollOffsetPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
