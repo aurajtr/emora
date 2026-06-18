@@ -26,7 +26,6 @@ struct MoodDetailView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.group) {
-                    header
                     summaryCard
                     if hasNote {
                         noteCard
@@ -38,36 +37,8 @@ struct MoodDetailView: View {
                 .padding(.bottom, AppSpacing.screenVertical)
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .navigationBar)
-    }
-
-    private var header: some View {
-        HStack {
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "chevron.left")
-            }
-            .buttonStyle(.glass)
-            .tint(AppColor.accent)
-            .controlSize(.large)
-            .accessibilityLabel("Back")
-            .accessibilityHint("Returns to the previous screen")
-
-            Spacer()
-
-            Text("Mood Details")
-                .font(.system(.headline, design: .default, weight: .semibold))
-                .foregroundStyle(AppColor.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-
-            Spacer()
-
-            Color.clear
-                .frame(width: 44, height: 1)
-                .accessibilityHidden(true)
-        }
+        .navigationTitle("Mood Details")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var summaryCard: some View {

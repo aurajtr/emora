@@ -42,8 +42,8 @@ struct HomeView: View {
                 .padding(.bottom, AppSpacing.screenVertical)
             }
         }
+        .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .navigationBar)
     }
 
     private var recentMoodSection: some View {

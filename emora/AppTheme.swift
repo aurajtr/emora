@@ -30,7 +30,7 @@ enum AppSpacing {
     static let group: CGFloat = 16
     static let screenVertical: CGFloat = 20
     static let compact: CGFloat = 8
-    static let cardRadius: CGFloat = 8
+    static let cardRadius: CGFloat = 16
     static let minimumTapTarget: CGFloat = 44
 }
 

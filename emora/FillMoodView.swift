@@ -19,17 +19,6 @@ struct FillMoodView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.group) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                    }
-                    .buttonStyle(.glass)
-                    .tint(AppColor.accent)
-                    .controlSize(.large)
-                    .accessibilityLabel("Back")
-                    .accessibilityHint("Returns to the home screen")
-
                     VStack(alignment: .leading, spacing: 4) {
                         Text("How was your mood?")
                             .pageTitleStyle()
@@ -72,8 +61,8 @@ struct FillMoodView: View {
                 .padding(.bottom, AppSpacing.screenVertical)
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .navigationBar)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var selectedMoodCard: some View {

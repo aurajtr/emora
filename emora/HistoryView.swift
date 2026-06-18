@@ -20,8 +20,13 @@ struct HistoryView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    header
-                    HistorySegmentedControl(selection: $selectedMode)
+                    Picker("History View", selection: $selectedMode) {
+                        ForEach(HistoryMode.allCases) { mode in
+                            Text(mode.title).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .tint(AppColor.accent)
 
                     if selectedMode == .list {
                         listContent
@@ -34,18 +39,8 @@ struct HistoryView: View {
                 .padding(.bottom, AppSpacing.screenVertical)
             }
         }
+        .navigationTitle("Mood History")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .navigationBar)
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Mood History")
-                .pageTitleStyle()
-
-            Text("Your mood records over time")
-                .secondaryTextStyle()
-        }
     }
 
     private var listContent: some View {
@@ -80,15 +75,25 @@ struct HistoryView: View {
                 .accessibilityValue(selectedSort.title)
             }
 
-            ForEach(sortedEntries) { entry in
-                NavigationLink {
-                    MoodDetailView(loggedMood: entry.loggedMood, note: entry.note, onDelete: {
-                        moodStore.delete(entry)
-                    })
-                } label: {
-                    HistoryMoodCard(entry: entry)
+            if sortedEntries.isEmpty {
+                ContentUnavailableView(
+                    "No Moods Yet",
+                    systemImage: "calendar.badge.plus",
+                    description: Text("Your logged moods will appear here.")
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 24)
+            } else {
+                ForEach(sortedEntries) { entry in
+                    NavigationLink {
+                        MoodDetailView(loggedMood: entry.loggedMood, note: entry.note, onDelete: {
+                            moodStore.delete(entry)
+                        })
+                    } label: {
+                        HistoryMoodCard(entry: entry)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         }
     }
@@ -107,14 +112,24 @@ struct HistoryView: View {
     private var calendarContent: some View {
         VStack(spacing: 12) {
             calendarCard
-            NavigationLink {
-                MoodDetailView(loggedMood: selectedCalendarEntry.loggedMood, note: selectedCalendarEntry.note, onDelete: {
-                    moodStore.delete(selectedCalendarEntry)
-                })
-            } label: {
-                HistoryMoodCard(entry: selectedCalendarEntry)
+            if let selectedCalendarEntry {
+                NavigationLink {
+                    MoodDetailView(loggedMood: selectedCalendarEntry.loggedMood, note: selectedCalendarEntry.note, onDelete: {
+                        moodStore.delete(selectedCalendarEntry)
+                    })
+                } label: {
+                    HistoryMoodCard(entry: selectedCalendarEntry)
+                }
+                .buttonStyle(.plain)
+            } else {
+                ContentUnavailableView(
+                    "No Mood on This Date",
+                    systemImage: "calendar",
+                    description: Text("Select a date with a mood record to see its details.")
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
             }
-            .buttonStyle(.plain)
         }
     }
 
@@ -200,17 +215,8 @@ struct HistoryView: View {
         }
     }
 
-    private var selectedCalendarEntry: MoodHistoryEntry {
-        if let entry = moodStore.entry(on: selectedDate, calendar: calendar) {
-            return entry
-        }
-
-        return MoodHistoryEntry(
-            mood: .happy,
-            note: calendar.isDateInToday(selectedDate) ? "No mood checked in yet today" : "No mood checked in for this date",
-            date: selectedDate,
-            tags: []
-        )
+    private var selectedCalendarEntry: MoodHistoryEntry? {
+        moodStore.entry(on: selectedDate, calendar: calendar)
     }
 
     private func moveMonth(by value: Int) {
@@ -278,41 +284,6 @@ private enum HistoryMode: String, CaseIterable, Identifiable {
     }
 }
 
-private struct HistorySegmentedControl: View {
-    @Binding var selection: HistoryMode
-
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(HistoryMode.allCases) { mode in
-                Button {
-                    selection = mode
-                } label: {
-                    Text(mode.title)
-                        .font(.system(.subheadline, design: .default, weight: .semibold))
-                        .foregroundStyle(selection == mode ? AppColor.textPrimary : .white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 40)
-                        .background {
-                            if selection == mode {
-                                Capsule()
-                                    .fill(Color.white)
-                                    .shadow(color: Color.black.opacity(0.08), radius: 3, y: 1)
-                            }
-                        }
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(mode.title)
-                .accessibilityValue(selection == mode ? "Selected" : "Not selected")
-            }
-        }
-        .padding(3)
-        .background(AppColor.accent, in: Capsule())
-        .overlay {
-            Capsule().stroke(AppColor.accent, lineWidth: 1)
-        }
-        .accessibilityElement(children: .contain)
-    }
-}
 
 private struct HistoryMoodCard: View {
     let entry: MoodHistoryEntry
@@ -336,9 +307,11 @@ private struct HistoryMoodCard: View {
                     .font(.system(.body, design: .default, weight: .semibold))
                     .foregroundStyle(AppColor.textPrimary)
 
-                Text(entry.note)
-                    .secondaryTextStyle()
-                    .lineLimit(2)
+                if !entry.note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Text(entry.note)
+                        .secondaryTextStyle()
+                        .lineLimit(2)
+                }
 
                 HStack(spacing: 6) {
                     ForEach(entry.tags.prefix(2)) { tag in

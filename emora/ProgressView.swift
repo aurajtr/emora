@@ -16,28 +16,27 @@ struct ProgressView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    header
-                    statGrid
-                    frequentMoodCard
-                    distributionCard
+                    if moodStore.entriesThisMonth.isEmpty {
+                        ContentUnavailableView(
+                            "No Progress Yet",
+                            systemImage: "chart.bar.xaxis",
+                            description: Text("Log a mood to see this month's trends.")
+                        )
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 48)
+                    } else {
+                        statGrid
+                        frequentMoodCard
+                        distributionCard
+                    }
                 }
                 .padding(.horizontal, AppSpacing.screenHorizontal)
                 .padding(.top, 8)
                 .padding(.bottom, AppSpacing.screenVertical)
             }
         }
+        .navigationTitle("My Progress")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .navigationBar)
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("My Progress")
-                .pageTitleStyle()
-
-            Text("See how you've been feeling")
-                .secondaryTextStyle()
-        }
     }
 
     private var statGrid: some View {

@@ -6,9 +6,21 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @State private var moodStore = MoodStore()
+
+    init() {
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor(AppColor.accent)],
+            for: .normal
+        )
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor(AppColor.textPrimary)],
+            for: .selected
+        )
+    }
 
     var body: some View {
         TabView {
