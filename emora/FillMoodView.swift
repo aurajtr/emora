@@ -4,7 +4,7 @@ struct FillMoodView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedMood: Mood
     @State private var note = ""
-    @State private var selectedTags: Set<MoodTag> = [.grateful, .hopeful]
+    @State private var selectedTags: Set<MoodTag> = [.relaxed]
 
     let onSave: (LoggedMood) -> Void
 

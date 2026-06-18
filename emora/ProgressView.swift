@@ -43,7 +43,7 @@ struct ProgressView: View {
     private var statGrid: some View {
         HStack(spacing: 12) {
             ForEach(stats) { stat in
-                VStack(spacing: 2) {
+                VStack(spacing: 0) {
                     Text(stat.value)
                         .font(.system(size: 34, weight: .bold, design: .default))
                         .foregroundStyle(AppColor.accent)
@@ -55,8 +55,10 @@ struct ProgressView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.85)
                 }
+                .padding(.top, 8)
+                .padding(.bottom, 10)
                 .frame(maxWidth: .infinity)
-                .frame(height: 88)
+                .frame(height: 76)
                 .background(Color(hex: "F1D7E1"), in: RoundedRectangle(cornerRadius: AppSpacing.cardRadius, style: .continuous))
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("\(stat.value) \(stat.title)")
@@ -94,7 +96,7 @@ struct ProgressView: View {
     }
 
     private var distributionCard: some View {
-        VStack(alignment: .leading, spacing: 28) {
+        VStack(alignment: .leading, spacing: 36) {
             Text("Mood Distribution This Month")
                 .font(.system(.headline, design: .default, weight: .semibold))
                 .foregroundStyle(AppColor.textSecondary)

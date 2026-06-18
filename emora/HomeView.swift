@@ -51,8 +51,14 @@ struct HomeView: View {
             Text("Recent Moods")
                 .sectionTitleStyle()
 
-            ForEach(moodStore.recentEntries) { entry in
-                MoodEntryCard(entry: entry)
+            if moodStore.recentEntries.isEmpty {
+                Text("No mood recorded yet")
+                    .secondaryTextStyle()
+                    .padding(.vertical, 4)
+            } else {
+                ForEach(moodStore.recentEntries) { entry in
+                    MoodEntryCard(entry: entry)
+                }
             }
         }
     }

@@ -28,7 +28,9 @@ struct MoodDetailView: View {
                 VStack(alignment: .leading, spacing: AppSpacing.group) {
                     header
                     summaryCard
-                    noteCard
+                    if hasNote {
+                        noteCard
+                    }
                     deleteButton
                 }
                 .padding(.horizontal, AppSpacing.screenHorizontal)
@@ -151,7 +153,11 @@ struct MoodDetailView: View {
     }
 
     private var displayNote: String {
-        note.isEmpty ? "Great Dinner with family, laughed a lot" : note
+        note.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var hasNote: Bool {
+        !displayNote.isEmpty
     }
 }
 

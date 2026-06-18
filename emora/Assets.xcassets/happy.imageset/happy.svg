@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <defs>
+        <linearGradient x1="50%" y1="19.2864583%" x2="50%" y2="93.1432292%" id="linearGradient-1">
+            <stop stop-color="#FFFDFC" offset="0%"></stop>
+            <stop stop-color="#F8E7EC" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="0 0 56 0 56 56 0 56"></polygon>
+        <path d="M28,0 C12.5359401,0 0,12.5359401 0,28 C0,43.4640599 12.5359401,56 28,56 C43.4640599,56 56,43.4640599 56,28 C56,12.5359401 43.4640599,0 28,0 Z" id="path-4"></path>
+        <rect id="path-6" x="0" y="0" width="56.1346982" height="56.1346982"></rect>
+        <polygon id="path-8" points="0 0 56 0 56 56 0 56"></polygon>
+        <path d="M28,0 C12.5359401,0 0,12.5359401 0,28 C0,43.4640599 12.5359401,56 28,56 C43.4640599,56 56,43.4640599 56,28 C56,12.5359401 43.4640599,0 28,0 Z" id="path-10"></path>
+        <polygon id="path-12" points="0 0 42.3265649 0 42.3265649 42.3265649 0 42.3265649"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Stack" transform="translate(-24, -190)">
+            <g id="Stack-3" transform="translate(0, 180)">
+                <g id="Group" transform="translate(24, 10)">
+                    <g id="Clipped">
+                        <mask id="mask-3" fill="white">
+                            <use xlink:href="#path-2"></use>
+                        </mask>
+                        <g id="Path"></g>
+                        <g mask="url(#mask-3)">
+                            <mask id="mask-5" fill="white">
+                                <use xlink:href="#path-4"></use>
+                            </mask>
+                            <g id="Path"></g>
+                            <g id="Group" mask="url(#mask-5)">
+                                <g transform="translate(-0.0673, -0.0673)">
+                                    <mask id="mask-7" fill="white">
+                                        <use xlink:href="#path-6"></use>
+                                    </mask>
+                                    <g id="Rectangle" stroke="none" fill="none"></g>
+                                    <g id="Clipped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" mask="url(#mask-7)">
+                                        <g transform="translate(0.0673, 0.0673)">
+                                            <mask id="mask-9" fill="white">
+                                                <use xlink:href="#path-8"></use>
+                                            </mask>
+                                            <g id="Path" stroke="none" fill="none"></g>
+                                            <g id="Clipped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" mask="url(#mask-9)">
+                                                <mask id="mask-11" fill="white">
+                                                    <use xlink:href="#path-10"></use>
+                                                </mask>
+                                                <g id="Path"></g>
+                                                <polygon id="Path" fill="#F5C9A0" mask="url(#mask-11)" points="0 0 56 0 56 56 0 56"></polygon>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <path d="M27.9964759,40.089948 C22.867763,40.089948 18.4078425,37.1579124 16.6360127,32.6192873 L18.5143481,31.8870616 C19.9823237,35.6460816 23.7045366,38.0741735 27.9976506,38.0741735 C32.2903731,38.0741735 36.012586,35.6452984 37.4805616,31.8870616 L39.3588969,32.6192873 C37.5870672,37.1579124 33.1271467,40.089948 27.9984337,40.089948 L27.9964759,40.089948 Z" id="Path" fill="#7A4A1E"></path>
+                    <path d="M39.1533255,22.9582145 L37.1379426,22.9582145 C37.1379426,22.5525536 36.2616211,21.9503273 35.0509034,21.9503273 C33.8401857,21.9503273 32.9638642,22.5525536 32.9638642,22.9582145 L30.9480897,22.9582145 C30.9480897,21.2627398 32.7500699,19.9345527 35.0509034,19.9345527 C37.3517369,19.9345527 39.1533255,21.2619567 39.1533255,22.9582145 Z" id="Path" fill="#7A4A1E"></path>
+                    <path d="M25.0444705,22.9582145 L23.0286961,22.9582145 C23.0286961,22.5525536 22.1523745,21.9503273 20.9416569,21.9503273 C19.7309391,21.9503273 18.8546177,22.5525536 18.8546177,22.9582145 L16.8388432,22.9582145 C16.8388432,21.2627398 18.6408234,19.9345527 20.9416569,19.9345527 C23.2424903,19.9345527 25.0444705,21.2619567 25.0444705,22.9582145 Z" id="Path" fill="#7A4A1E"></path>
+                    <g id="Clipped" transform="translate(6.8367, 6.8367)">
+                        <mask id="mask-13" fill="white">
+                            <use xlink:href="#path-12"></use>
+                        </mask>
+                        <g id="Path"></g>
+                        <path d="M-0.00352405616,21.160933 C-0.00352405616,9.49152542 9.48995917,-0.00352405616 21.1597584,-0.00352405616 C32.8299491,-0.00352405616 42.3230408,9.49074234 42.3230408,21.1597584 C42.3230408,21.7000935 42.3026858,22.2357642 42.2627022,22.766044 C41.439176,33.6880113 32.2888308,42.3230408 21.1597584,42.3230408 C9.48995917,42.3242154 -0.00352405616,32.8299491 -0.00352405616,21.160933 Z M21.1597584,2.0122504 C10.601611,2.0122504 2.01146722,10.6027858 2.01146722,21.160933 C2.01146722,31.7190804 10.601611,40.3092241 21.1597584,40.3092241 C31.7179057,40.3092241 40.3084411,31.7190804 40.3084411,21.160933 C40.3084411,10.6027858 31.7179057,2.0122504 21.1597584,2.0122504 Z" id="Shape" fill="#7A4A1E" fill-rule="nonzero" mask="url(#mask-13)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

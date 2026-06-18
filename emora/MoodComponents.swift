@@ -75,8 +75,10 @@ struct MoodEntryCard: View {
                     .captionTextStyle()
             }
 
-            Text(entry.note)
-                .secondaryTextStyle()
+            if !entry.note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Text(entry.note)
+                    .secondaryTextStyle()
+            }
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -89,11 +91,11 @@ struct MoodEntryCard: View {
 struct ProfileHeaderView: View {
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "person.crop.circle.fill")
+            Image("profile")
                 .resizable()
-                .scaledToFit()
-                .foregroundStyle(AppColor.textTertiary)
+                .scaledToFill()
                 .frame(width: 42, height: 42)
+                .clipShape(Circle())
                 .background(AppColor.surface, in: Circle())
                 .overlay {
                     Circle().stroke(AppColor.border, lineWidth: 0.5)

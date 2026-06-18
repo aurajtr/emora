@@ -9,7 +9,7 @@ final class MoodStore {
         Calendar.autoupdatingCurrent
     }
 
-    init(entries: [MoodHistoryEntry] = MoodHistoryEntry.samples()) {
+    init(entries: [MoodHistoryEntry] = []) {
         self.entries = entries.sorted { $0.date > $1.date }
     }
 
