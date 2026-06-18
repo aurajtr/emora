@@ -1,0 +1,163 @@
+import SwiftUI
+
+struct ProgressView: View {
+    @Environment(MoodStore.self) private var moodStore
+
+    private var stats: [ProgressStat] {
+        [
+            ProgressStat(value: "\(moodStore.currentStreak)", title: "Day Streak"),
+            ProgressStat(value: "\(moodStore.happyDaysThisMonth)", title: "Happy Days")
+        ]
+    }
+
+    var body: some View {
+        ZStack {
+            AppColor.backgroundGradient.ignoresSafeArea()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: AppSpacing.section) {
+                    header
+                    statGrid
+                    frequentMoodCard
+                    distributionCard
+                }
+                .padding(.horizontal, AppSpacing.screenHorizontal)
+                .padding(.top, 8)
+                .padding(.bottom, AppSpacing.screenVertical)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .navigationBar)
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("My Progress")
+                .pageTitleStyle()
+
+            Text("See how you've been feeling")
+                .secondaryTextStyle()
+        }
+    }
+
+    private var statGrid: some View {
+        HStack(spacing: 12) {
+            ForEach(stats) { stat in
+                VStack(spacing: 2) {
+                    Text(stat.value)
+                        .font(.system(size: 34, weight: .bold, design: .default))
+                        .foregroundStyle(AppColor.accent)
+                        .minimumScaleFactor(0.8)
+
+                    Text(stat.title)
+                        .font(.system(.subheadline, design: .default, weight: .semibold))
+                        .foregroundStyle(AppColor.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 88)
+                .background(Color(hex: "F1D7E1"), in: RoundedRectangle(cornerRadius: AppSpacing.cardRadius, style: .continuous))
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(stat.value) \(stat.title)")
+            }
+        }
+    }
+
+    private var frequentMoodCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Most Frequent Mood")
+                .font(.system(.headline, design: .default, weight: .semibold))
+                .foregroundStyle(AppColor.textSecondary)
+
+            if let frequentMood = moodStore.mostFrequentMoodThisMonth {
+                HStack(spacing: 10) {
+                    Circle()
+                        .fill(frequentMood.mood.fill)
+                        .frame(width: 24, height: 24)
+                        .accessibilityHidden(true)
+
+                    Text("\(frequentMood.mood.name) - \(frequentMood.count) \(frequentMood.count == 1 ? "Day" : "Days")")
+                        .font(.system(.title3, design: .default, weight: .bold))
+                        .foregroundStyle(AppColor.textPrimary)
+                }
+            } else {
+                Text("No mood records this month")
+                    .secondaryTextStyle()
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(height: 88)
+        .cardBackground()
+        .accessibilityElement(children: .combine)
+    }
+
+    private var distributionCard: some View {
+        VStack(alignment: .leading, spacing: 28) {
+            Text("Mood Distribution This Month")
+                .font(.system(.headline, design: .default, weight: .semibold))
+                .foregroundStyle(AppColor.textSecondary)
+
+            HStack(alignment: .bottom, spacing: 12) {
+                ForEach(moodStore.moodDistributionThisMonth) { item in
+                    MoodBar(item: item)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 150, alignment: .bottom)
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground()
+        .accessibilityElement(children: .contain)
+    }
+}
+
+private struct MoodBar: View {
+    let item: MoodDistribution
+
+    var body: some View {
+        VStack(spacing: 8) {
+            ZStack(alignment: .bottom) {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(AppColor.surface.opacity(0.7))
+                    .frame(width: 38, height: 104)
+
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(item.mood.fill)
+                    .frame(width: 38, height: barHeight)
+                    .opacity(item.percentage == 0 ? 0.35 : 1)
+            }
+            .frame(height: 104, alignment: .bottom)
+
+            MoodIcon(mood: item.mood, isSelected: false, size: 30)
+                .opacity(item.percentage == 0 ? 0.55 : 1)
+
+            Text("\(item.percentage)%")
+                .font(.system(.subheadline, design: .default, weight: .semibold))
+                .foregroundStyle(AppColor.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(item.mood.name), \(item.percentage) percent")
+    }
+
+    private var barHeight: CGFloat {
+        guard item.percentage > 0 else { return 0 }
+        return max(CGFloat(item.percentage) / 100 * 104, 10)
+    }
+}
+
+private struct ProgressStat: Identifiable {
+    let id = UUID()
+    let value: String
+    let title: String
+}
+
+#Preview("Progress") {
+    ProgressView()
+        .environment(MoodStore())
+}

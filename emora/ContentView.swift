@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var moodStore = MoodStore()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            NavigationStack {
+                HomeView()
+            }
+            .tabItem {
+                Label("Home", systemImage: "house.fill")
+            }
+
+            NavigationStack {
+                HistoryView()
+            }
+            .tabItem {
+                Label("History", systemImage: "calendar")
+            }
+
+            NavigationStack {
+                ProgressView()
+            }
+            .tabItem {
+                Label("Progress", systemImage: "chart.bar.fill")
+            }
         }
-        .padding()
+        .tint(AppColor.accent)
+        .environment(moodStore)
     }
 }
 
-#Preview {
+#Preview("Home") {
     ContentView()
 }
