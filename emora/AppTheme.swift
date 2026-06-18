@@ -77,6 +77,28 @@ extension View {
                     .stroke(AppColor.border, lineWidth: 0.5)
             }
     }
+
+    func appNavigationTitle(_ title: String) -> some View {
+        navigationTitle(title)
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(.automatic, for: .navigationBar)
+    }
+
+    func scrollResponsiveNavigationTitle(_ title: String, isVisible: Bool) -> some View {
+        navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(isVisible ? .visible : .hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .title) {
+                    Text(title)
+                        .font(.system(.headline, design: .default, weight: .semibold))
+                        .foregroundStyle(AppColor.textPrimary)
+                        .opacity(isVisible ? 1 : 0)
+                        .accessibilityHidden(!isVisible)
+                }
+            }
+            .animation(.easeInOut(duration: 0.18), value: isVisible)
+    }
 }
 
 extension Color {

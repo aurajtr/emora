@@ -10,69 +10,63 @@ struct HomeView: View {
     }
 
     var body: some View {
-        ZStack {
-            AppColor.backgroundGradient.ignoresSafeArea()
+        ScrollView {
+            GeometryReader { proxy in
+                Color.clear
+                    .preference(
+                        key: HomeScrollOffsetPreferenceKey.self,
+                        value: proxy.frame(in: .named("homeScroll")).minY
+                    )
+            }
+            .frame(height: 0)
 
-            ScrollView {
-                GeometryReader { proxy in
-                    Color.clear
-                        .preference(
-                            key: HomeScrollOffsetPreferenceKey.self,
-                            value: proxy.frame(in: .named("homeScroll")).minY
-                        )
-                }
-                .frame(height: 0)
+            VStack(alignment: .leading, spacing: AppSpacing.section) {
+                homeHeader
 
-                VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    homeHeader
-
-                    if let todayEntry = moodStore.todayEntry {
-                        MoodLoggedView(
-                            loggedMood: todayEntry.loggedMood,
-                            onMoodLogged: { updatedLog in
-                                moodStore.saveToday(updatedLog)
-                                selectedMood = updatedLog.mood
-                            },
-                            onDelete: {
-                                moodStore.delete(todayEntry)
-                                selectedMood = nil
-                            }
-                        )
-                    } else {
-                        SelectedMoodView(selectedMood: $selectedMood) { newLog in
-                            moodStore.saveToday(newLog)
-                            selectedMood = newLog.mood
+                if let todayEntry = moodStore.todayEntry {
+                    MoodLoggedView(
+                        loggedMood: todayEntry.loggedMood,
+                        onMoodLogged: { updatedLog in
+                            moodStore.saveToday(updatedLog)
+                            selectedMood = updatedLog.mood
+                        },
+                        onDelete: {
+                            moodStore.delete(todayEntry)
+                            selectedMood = nil
                         }
+                    )
+                } else {
+                    SelectedMoodView(selectedMood: $selectedMood) { newLog in
+                        moodStore.saveToday(newLog)
+                        selectedMood = newLog.mood
                     }
-
-                    recentMoodSection
                 }
-                .padding(.horizontal, AppSpacing.screenHorizontal)
-                .padding(.top, 0)
-                .padding(.bottom, AppSpacing.screenVertical)
+
+                recentMoodSection
             }
-            .coordinateSpace(name: "homeScroll")
-            .onPreferenceChange(HomeScrollOffsetPreferenceKey.self) { offset in
-                showsNavigationTitle = offset < -16
-            }
+            .padding(.horizontal, AppSpacing.screenHorizontal)
+            .padding(.top, 0)
+            .padding(.bottom, AppSpacing.screenVertical)
         }
-        .navigationTitle(showsNavigationTitle ? "Mood" : "")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(showsNavigationTitle ? .visible : .hidden, for: .navigationBar)
+        .coordinateSpace(name: "homeScroll")
+        .background(AppColor.backgroundGradient.ignoresSafeArea())
+        .scrollResponsiveNavigationTitle("Mood", isVisible: showsNavigationTitle)
+        .onPreferenceChange(HomeScrollOffsetPreferenceKey.self) { offset in
+            showsNavigationTitle = offset < -18
+        }
     }
 
     private var homeHeader: some View {
-        HStack(alignment: .center) {
+        ZStack(alignment: .trailing) {
             Text("Mood")
                 .font(.system(.largeTitle, design: .default, weight: .bold))
                 .foregroundStyle(AppColor.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityAddTraits(.isHeader)
-
-            Spacer()
 
             profileButton
         }
-        .padding(.top, 35)
+        .frame(maxWidth: .infinity)
     }
 
     private var profileButton: some View {

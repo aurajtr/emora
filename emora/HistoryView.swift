@@ -8,7 +8,6 @@ struct HistoryView: View {
     @State private var selectedDate = Date.now
     @State private var showsNavigationTitle = false
 
-
     private var calendar: Calendar {
         var calendar = Calendar.autoupdatingCurrent
         calendar.firstWeekday = 2
@@ -16,55 +15,51 @@ struct HistoryView: View {
     }
 
     var body: some View {
-        ZStack {
-            AppColor.backgroundGradient.ignoresSafeArea()
+        ScrollView {
+            GeometryReader { proxy in
+                Color.clear
+                    .preference(
+                        key: HistoryScrollOffsetPreferenceKey.self,
+                        value: proxy.frame(in: .named("historyScroll")).minY
+                    )
+            }
+            .frame(height: 0)
 
-            ScrollView {
-                GeometryReader { proxy in
-                    Color.clear
-                        .preference(
-                            key: HistoryScrollOffsetPreferenceKey.self,
-                            value: proxy.frame(in: .named("historyScroll")).minY
-                        )
-                }
-                .frame(height: 0)
+            VStack(alignment: .leading, spacing: AppSpacing.section) {
+                pageHeader("Mood History")
 
-                VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    pageHeader("Mood History")
-
-                    Picker("History View", selection: $selectedMode) {
-                        ForEach(HistoryMode.allCases) { mode in
-                            Text(mode.title).tag(mode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .tint(AppColor.accent)
-
-                    if selectedMode == .list {
-                        listContent
-                    } else {
-                        calendarContent
+                Picker("History View", selection: $selectedMode) {
+                    ForEach(HistoryMode.allCases) { mode in
+                        Text(mode.title).tag(mode)
                     }
                 }
-                .padding(.horizontal, AppSpacing.screenHorizontal)
-                .padding(.top, 8)
-                .padding(.bottom, AppSpacing.screenVertical)
+                .pickerStyle(.segmented)
+                .tint(AppColor.accent)
+
+                if selectedMode == .list {
+                    listContent
+                } else {
+                    calendarContent
+                }
             }
-            .coordinateSpace(name: "historyScroll")
-            .onPreferenceChange(HistoryScrollOffsetPreferenceKey.self) { offset in
-                showsNavigationTitle = offset < -16
-            }
+            .padding(.horizontal, AppSpacing.screenHorizontal)
+            .padding(.top, 0)
+            .padding(.bottom, AppSpacing.screenVertical)
         }
-        .navigationTitle(showsNavigationTitle ? "Mood History" : "")
-        .navigationBarTitleDisplayMode(.inline)
+        .coordinateSpace(name: "historyScroll")
+        .background(AppColor.backgroundGradient.ignoresSafeArea())
+        .scrollResponsiveNavigationTitle("Mood History", isVisible: showsNavigationTitle)
+        .onPreferenceChange(HistoryScrollOffsetPreferenceKey.self) { offset in
+            showsNavigationTitle = offset < -18
+        }
     }
 
     private func pageHeader(_ title: String) -> some View {
         Text(title)
             .font(.system(.largeTitle, design: .default, weight: .bold))
             .foregroundStyle(AppColor.textPrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityAddTraits(.isHeader)
-            .padding(.top, 28)
     }
 
     private var listContent: some View {

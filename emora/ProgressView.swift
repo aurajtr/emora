@@ -12,55 +12,51 @@ struct ProgressView: View {
     }
 
     var body: some View {
-        ZStack {
-            AppColor.backgroundGradient.ignoresSafeArea()
-
-            ScrollView {
-                GeometryReader { proxy in
-                    Color.clear
-                        .preference(
-                            key: ProgressScrollOffsetPreferenceKey.self,
-                            value: proxy.frame(in: .named("progressScroll")).minY
-                        )
-                }
-                .frame(height: 0)
-
-                VStack(alignment: .leading, spacing: AppSpacing.section) {
-                    pageHeader("Progress")
-
-                    if moodStore.entriesThisMonth.isEmpty {
-                        ContentUnavailableView(
-                            "No Progress Yet",
-                            systemImage: "chart.bar.xaxis",
-                            description: Text("Log a mood to see this month's trends.")
-                        )
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 48)
-                    } else {
-                        statGrid
-                        frequentMoodCard
-                        distributionCard
-                    }
-                }
-                .padding(.horizontal, AppSpacing.screenHorizontal)
-                .padding(.top, 8)
-                .padding(.bottom, AppSpacing.screenVertical)
+        ScrollView {
+            GeometryReader { proxy in
+                Color.clear
+                    .preference(
+                        key: ProgressScrollOffsetPreferenceKey.self,
+                        value: proxy.frame(in: .named("progressScroll")).minY
+                    )
             }
-            .coordinateSpace(name: "progressScroll")
-            .onPreferenceChange(ProgressScrollOffsetPreferenceKey.self) { offset in
-                showsNavigationTitle = offset < -16
+            .frame(height: 0)
+
+            VStack(alignment: .leading, spacing: AppSpacing.section) {
+                pageHeader("Progress")
+
+                if moodStore.entriesThisMonth.isEmpty {
+                    ContentUnavailableView(
+                        "No Progress Yet",
+                        systemImage: "chart.bar.xaxis",
+                        description: Text("Log a mood to see this month's trends.")
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 48)
+                } else {
+                    statGrid
+                    frequentMoodCard
+                    distributionCard
+                }
             }
+            .padding(.horizontal, AppSpacing.screenHorizontal)
+            .padding(.top, 0)
+            .padding(.bottom, AppSpacing.screenVertical)
         }
-        .navigationTitle(showsNavigationTitle ? "Progress" : "")
-        .navigationBarTitleDisplayMode(.inline)
+        .coordinateSpace(name: "progressScroll")
+        .background(AppColor.backgroundGradient.ignoresSafeArea())
+        .scrollResponsiveNavigationTitle("Progress", isVisible: showsNavigationTitle)
+        .onPreferenceChange(ProgressScrollOffsetPreferenceKey.self) { offset in
+            showsNavigationTitle = offset < -18
+        }
     }
 
     private func pageHeader(_ title: String) -> some View {
         Text(title)
             .font(.system(.largeTitle, design: .default, weight: .bold))
             .foregroundStyle(AppColor.textPrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityAddTraits(.isHeader)
-            .padding(.top, 28)
     }
 
     private var statGrid: some View {
