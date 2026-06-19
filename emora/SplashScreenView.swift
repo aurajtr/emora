@@ -27,9 +27,20 @@ struct SplashScreenView: View {
     @State private var wordmarkScale = 0.96
     @State private var wordmarkOpacity = 0.0
 
+    private let splashGradient = LinearGradient(
+        stops: [
+            Gradient.Stop(color: Color(hex: "F0B8C8", darkHex: "1B1217"), location: 0),
+            Gradient.Stop(color: Color(hex: "F8D4DE", darkHex: "2A1821"), location: 0.34),
+            Gradient.Stop(color: Color(hex: "FFF4F8", darkHex: "3A2430"), location: 0.68),
+            Gradient.Stop(color: Color(hex: "F8C7D6", darkHex: "4A2A38"), location: 1)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
     var body: some View {
         ZStack {
-            AppColor.backgroundGradient
+            splashGradient
                 .ignoresSafeArea()
 
             Text("Emora")
@@ -49,8 +60,14 @@ struct SplashScreenView: View {
     }
 }
 
-#Preview("Splash Screen") {
+#Preview("Splash Screen Light") {
     SplashScreenView()
+        .preferredColorScheme(.light)
+}
+
+#Preview("Splash Screen Dark") {
+    SplashScreenView()
+        .preferredColorScheme(.dark)
 }
 
 #Preview("Root") {
