@@ -28,7 +28,7 @@ struct ContentView: View {
                 HomeView()
             }
             .tabItem {
-                Label("Today", systemImage: "heart.fill")
+                Label("Summary", systemImage: "square.grid.2x2.fill")
             }
 
             NavigationStack {
@@ -36,13 +36,6 @@ struct ContentView: View {
             }
             .tabItem {
                 Label("History", systemImage: "calendar")
-            }
-
-            NavigationStack {
-                ProgressView()
-            }
-            .tabItem {
-                Label("Progress", systemImage: "chart.bar.fill")
             }
         }
         .tint(AppColor.accent)
