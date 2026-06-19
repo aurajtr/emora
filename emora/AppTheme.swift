@@ -87,16 +87,17 @@ extension View {
     func scrollResponsiveNavigationTitle(_ title: String, isVisible: Bool) -> some View {
         navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(isVisible ? .visible : .hidden, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .title) {
+                ToolbarItem(placement: .principal) {
                     Text(title)
-                        .font(.system(.headline, design: .default, weight: .semibold))
+                        .font(.headline)
                         .foregroundStyle(AppColor.textPrimary)
                         .opacity(isVisible ? 1 : 0)
                         .accessibilityHidden(!isVisible)
+                        .animation(.easeInOut(duration: 0.18), value: isVisible)
                 }
             }
+            .toolbarBackground(isVisible ? .visible : .hidden, for: .navigationBar)
             .animation(.easeInOut(duration: 0.18), value: isVisible)
     }
 }
