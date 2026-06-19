@@ -58,7 +58,7 @@ struct HomeView: View {
 
     private var homeHeader: some View {
         ZStack(alignment: .trailing) {
-            Text("Mood")
+            Text("Today")
                 .font(.system(.largeTitle, design: .default, weight: .bold))
                 .foregroundStyle(AppColor.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
