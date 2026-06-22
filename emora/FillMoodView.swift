@@ -63,6 +63,7 @@ struct FillMoodView: View {
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
     }
 
     private var selectedMoodCard: some View {

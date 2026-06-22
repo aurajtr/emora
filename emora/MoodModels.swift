@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum Mood: String, CaseIterable, Identifiable, Hashable {
+enum Mood: String, CaseIterable, Identifiable, Hashable, Codable {
     case happy
     case calm
     case sad
@@ -50,13 +50,13 @@ enum Mood: String, CaseIterable, Identifiable, Hashable {
     }
 }
 
-struct LoggedMood: Hashable {
+struct LoggedMood: Hashable, Codable {
     let mood: Mood
     let note: String
     let tags: [MoodTag]
 }
 
-struct MoodHistoryEntry: Identifiable, Hashable {
+struct MoodHistoryEntry: Identifiable, Hashable, Codable {
     let id: UUID
     var mood: Mood
     var note: String
@@ -113,7 +113,7 @@ struct MoodHistoryEntry: Identifiable, Hashable {
     }
 }
 
-enum MoodTag: String, CaseIterable, Identifiable, Hashable {
+enum MoodTag: String, CaseIterable, Identifiable, Hashable, Codable {
     case relaxed
     case grateful
     case energized

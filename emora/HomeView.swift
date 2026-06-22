@@ -60,15 +60,13 @@ struct HomeView: View {
     }
 
     private var profileButton: some View {
-        Image("profile")
-            .resizable()
-            .scaledToFill()
-            .frame(width: 44, height: 44)
-            .clipShape(Circle())
-            .overlay {
-                Circle().stroke(AppColor.border, lineWidth: 0.5)
-            }
-            .accessibilityLabel("Profile")
+        NavigationLink {
+            ProfileView()
+        } label: {
+            ProfileAvatarView(size: 44)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Profile")
     }
 
     private var todayMoodSection: some View {

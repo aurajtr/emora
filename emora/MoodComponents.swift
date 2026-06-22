@@ -89,21 +89,15 @@ struct MoodEntryCard: View {
 }
 
 struct ProfileHeaderView: View {
+    @AppStorage("profileUsername") private var username = ""
+
     var body: some View {
         HStack(spacing: 12) {
-            Image("profile")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 42, height: 42)
-                .clipShape(Circle())
-                .background(AppColor.surface, in: Circle())
-                .overlay {
-                    Circle().stroke(AppColor.border, lineWidth: 0.5)
-                }
+            ProfileAvatarView(size: 42)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("Hello, Aura J")
+                Text("Hello, \(displayName)")
                     .font(.system(.body, design: .default, weight: .semibold))
                     .foregroundStyle(AppColor.textPrimary)
 
@@ -113,7 +107,12 @@ struct ProfileHeaderView: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Hello Aura J. \(todayText)")
+        .accessibilityLabel("Hello \(displayName). \(todayText)")
+    }
+
+    private var displayName: String {
+        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedUsername.isEmpty ? "there" : trimmedUsername
     }
 
     private var todayText: String {

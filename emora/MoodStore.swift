@@ -9,8 +9,11 @@ final class MoodStore {
         Calendar.autoupdatingCurrent
     }
 
-    init(entries: [MoodHistoryEntry] = []) {
-        self.entries = entries.sorted { $0.date > $1.date }
+    private static let fileURL = URL.documentsDirectory.appending(path: "mood-history.json")
+
+    init(entries: [MoodHistoryEntry]? = nil) {
+        let initialEntries = entries ?? Self.loadEntries()
+        self.entries = initialEntries.sorted { $0.date > $1.date }
     }
 
     var totalMoodCount: Int {
@@ -18,7 +21,7 @@ final class MoodStore {
     }
 
     var recentEntries: [MoodHistoryEntry] {
-        entries.sorted { $0.date > $1.date }
+        Array(entries.sorted { $0.date > $1.date }.prefix(5))
     }
 
     var todayEntry: MoodHistoryEntry? {
@@ -92,10 +95,12 @@ final class MoodStore {
         }
 
         entries.sort { $0.date > $1.date }
+        persistEntries()
     }
 
     func delete(_ entry: MoodHistoryEntry) {
         entries.removeAll { $0.id == entry.id }
+        persistEntries()
     }
 
     func entry(on date: Date, calendar: Calendar = .autoupdatingCurrent) -> MoodHistoryEntry? {
@@ -108,6 +113,26 @@ final class MoodStore {
 
     private var moodCountsThisMonth: [Mood: Int] {
         Dictionary(grouping: entriesThisMonth, by: \.mood).mapValues(\.count)
+    }
+
+    private func persistEntries() {
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            let data = try encoder.encode(entries)
+            try data.write(to: Self.fileURL, options: [.atomic])
+        } catch {
+            assertionFailure("Failed to save mood history: \(error.localizedDescription)")
+        }
+    }
+
+    private static func loadEntries() -> [MoodHistoryEntry] {
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try JSONDecoder().decode([MoodHistoryEntry].self, from: data)
+        } catch {
+            return []
+        }
     }
 }
 

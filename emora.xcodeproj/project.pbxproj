@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1A8C81AC2FE91A1A00E1C94E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8C81AB2FE91A1A00E1C94E /* ProfileView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1A2A000D2FE2E3CE005F13C4 /* emora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emora.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A8C81AB2FE91A1A00E1C94E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +39,7 @@
 			children = (
 				1A2A000F2FE2E3CE005F13C4 /* emora */,
 				1A2A000E2FE2E3CE005F13C4 /* Products */,
+				1A8C81AB2FE91A1A00E1C94E /* ProfileView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A8C81AC2FE91A1A00E1C94E /* ProfileView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

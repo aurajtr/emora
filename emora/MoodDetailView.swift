@@ -39,6 +39,7 @@ struct MoodDetailView: View {
         }
         .navigationTitle("Mood Details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
     }
 
     private var summaryCard: some View {
