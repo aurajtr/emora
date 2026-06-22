@@ -21,7 +21,7 @@ final class MoodStore {
     }
 
     var recentEntries: [MoodHistoryEntry] {
-        Array(entries.sorted { $0.date > $1.date }.prefix(5))
+        Array(entries.prefix(5))
     }
 
     var todayEntry: MoodHistoryEntry? {
@@ -118,7 +118,6 @@ final class MoodStore {
     private func persistEntries() {
         do {
             let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             let data = try encoder.encode(entries)
             try data.write(to: Self.fileURL, options: [.atomic])
         } catch {

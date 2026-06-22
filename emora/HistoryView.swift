@@ -25,7 +25,7 @@ struct HistoryView: View {
             }
             .frame(height: 0)
 
-            VStack(alignment: .leading, spacing: AppSpacing.section) {
+            LazyVStack(alignment: .leading, spacing: AppSpacing.section) {
                 pageHeader("Mood History")
 
                 Picker("History View", selection: $selectedMode) {
@@ -63,7 +63,7 @@ struct HistoryView: View {
     }
 
     private var listContent: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        LazyVStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 Text("All Moods (\(moodStore.totalMoodCount))")
                     .sectionTitleStyle()
@@ -194,10 +194,12 @@ struct HistoryView: View {
             }
 
             LazyVGrid(columns: CalendarDay.columns, spacing: 8) {
+                let moodsByDay = displayedMonthMoodsByDay
+
                 ForEach(calendarDays) { day in
                     CalendarMoodDay(
                         day: day,
-                        mood: day.isCurrentMonth ? moodStore.entry(on: day.date, calendar: calendar)?.mood : nil,
+                        mood: day.isCurrentMonth ? moodsByDay[calendar.startOfDay(for: day.date)] : nil,
                         isSelected: calendar.isDate(day.date, inSameDayAs: selectedDate)
                     ) {
                         selectedDate = day.date
@@ -232,6 +234,12 @@ struct HistoryView: View {
                 isToday: calendar.isDateInToday(date)
             )
         }
+    }
+
+    private var displayedMonthMoodsByDay: [Date: Mood] {
+        Dictionary(uniqueKeysWithValues: moodStore.entries(inSameMonthAs: displayedMonth, calendar: calendar).map {
+            (calendar.startOfDay(for: $0.date), $0.mood)
+        })
     }
 
     private var selectedCalendarEntry: MoodHistoryEntry? {

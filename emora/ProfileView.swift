@@ -268,6 +268,7 @@ private struct ProfilePhotoConfirmationView: View {
 
 struct ProfileAvatarView: View {
     @AppStorage("profileImageVersion") private var profileImageVersion = 0
+    @State private var savedImage: UIImage?
     let size: CGFloat
     var previewImageData: Data? = nil
     var hidesSavedImage = false
@@ -281,7 +282,9 @@ struct ProfileAvatarView: View {
                 Circle().stroke(AppColor.border, lineWidth: 0.5)
             }
             .contentShape(Circle())
-            .id(profileImageVersion)
+            .task(id: profileImageVersion) {
+                savedImage = hidesSavedImage ? nil : ProfileImageStore.load()
+            }
     }
 
     @ViewBuilder
@@ -290,8 +293,8 @@ struct ProfileAvatarView: View {
             Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()
-        } else if !hidesSavedImage, let uiImage = ProfileImageStore.load() {
-            Image(uiImage: uiImage)
+        } else if !hidesSavedImage, let savedImage {
+            Image(uiImage: savedImage)
                 .resizable()
                 .scaledToFill()
         } else {
@@ -328,7 +331,7 @@ enum ProfileImageStore {
 }
 
 private extension UIImage {
-    func profileImageData(maxDimension: CGFloat = 720) -> Data? {
+    func profileImageData(maxDimension: CGFloat = 480) -> Data? {
         let largestSide = max(size.width, size.height)
         let scale = min(1, maxDimension / largestSide)
         let targetSize = CGSize(width: size.width * scale, height: size.height * scale)
@@ -338,7 +341,7 @@ private extension UIImage {
         let resizedImage = renderer.image { _ in
             draw(in: CGRect(origin: .zero, size: targetSize))
         }
-        return resizedImage.jpegData(compressionQuality: 0.78)
+        return resizedImage.jpegData(compressionQuality: 0.7)
     }
 }
 

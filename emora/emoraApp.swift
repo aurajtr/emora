@@ -1,6 +1,6 @@
 //
 //  emoraApp.swift
-//  emora
+//  Emora
 //
 //  Created by Aura Jatra on 17/06/26.
 //
